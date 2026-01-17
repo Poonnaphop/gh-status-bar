@@ -1,0 +1,60 @@
+{
+  "name": "gh-status-bar",
+  "displayName": "GitHub Status Bar",
+  "description": "Display GitHub authenticated user in VS Code status bar with multi-account support and custom colors",
+  "version": "0.0.1",
+  "publisher": "poonnaphop",
+  "author": {
+    "name": "Poonnaphop"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/gh-status-bar"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/gh-status-bar/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/gh-status-bar#readme",
+  "keywords": [
+    "github",
+    "status-bar",
+    "authentication",
+    "gh-cli",
+    "multi-account"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "gh-status-bar.refresh",
+        "title": "Refresh GitHub User"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.x",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  }
+}
