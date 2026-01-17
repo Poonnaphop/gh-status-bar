@@ -5,16 +5,26 @@ import * as os from 'os';
 
 const execAsync = promisify(exec);
 
-// Determine the correct gh command based on platform
-function getGhCommand(): string {
+// Find the gh command path
+async function findGhPath(): Promise<string> {
     const platform = os.platform();
     
     if (platform === 'win32') {
-        // Windows: gh.exe should be in PATH
+        // Windows: gh should be in PATH
         return 'gh';
     } else if (platform === 'darwin') {
-        // macOS: try homebrew paths, fallback to PATH
-        return '/opt/homebrew/bin/gh || /usr/local/bin/gh || gh';
+        // macOS: try common homebrew paths
+        const paths = ['/opt/homebrew/bin/gh', '/usr/local/bin/gh'];
+        for (const path of paths) {
+            try {
+                await execAsync(`test -f ${path}`);
+                return path;
+            } catch {
+                continue;
+            }
+        }
+        // Fallback to PATH
+        return 'gh';
     } else {
         // Linux: should be in PATH
         return 'gh';
@@ -23,10 +33,8 @@ function getGhCommand(): string {
 
 // Execute gh command with proper shell environment
 async function execGh(command: string): Promise<{ stdout: string; stderr: string }> {
-    const ghBinary = getGhCommand();
-    const fullCommand = platform === 'win32' 
-        ? `${ghBinary} ${command}` 
-        : `${ghBinary} ${command}`;
+    const ghPath = await findGhPath();
+    const fullCommand = `${ghPath} ${command}`;
     
     // On Windows, use cmd.exe; on Unix, use sh
     const shell = platform === 'win32' ? 'cmd.exe' : '/bin/sh';
@@ -89,6 +97,29 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 async function showAccountMenu() {
+    // Build quick pick items with buttons interface
+    interface QuickPickItemWithButton extends vscode.QuickPickItem {
+        buttons?: vscode.QuickInputButton[];
+        action?: string;
+        username?: string;
+    }
+    
+    const colorButton: vscode.QuickInputButton = {
+        iconPath: new vscode.ThemeIcon('symbol-color'),
+        tooltip: 'Set color for this account'
+    };
+    
+    const deleteButton: vscode.QuickInputButton = {
+        iconPath: new vscode.ThemeIcon('trash'),
+        tooltip: 'Delete this account'
+    };
+    
+    // Create and show quick pick immediately
+    const quickPick = vscode.window.createQuickPick<QuickPickItemWithButton>();
+    quickPick.placeholder = 'Loading accounts...';
+    quickPick.busy = true; // Show loading spinner
+    quickPick.show();
+    
     try {
         let accounts: GitHubAccount[] = [];
         
@@ -104,23 +135,6 @@ async function showAccountMenu() {
                 throw error;
             }
         }
-        
-        // Build quick pick items with buttons
-        interface QuickPickItemWithButton extends vscode.QuickPickItem {
-            buttons?: vscode.QuickInputButton[];
-            action?: string;
-            username?: string;
-        }
-        
-        const colorButton: vscode.QuickInputButton = {
-            iconPath: new vscode.ThemeIcon('symbol-color'),
-            tooltip: 'Set color for this account'
-        };
-        
-        const deleteButton: vscode.QuickInputButton = {
-            iconPath: new vscode.ThemeIcon('trash'),
-            tooltip: 'Delete this account'
-        };
         
         const items: QuickPickItemWithButton[] = [];
         
@@ -173,7 +187,8 @@ async function showAccountMenu() {
             });
         }
         
-        const quickPick = vscode.window.createQuickPick<QuickPickItemWithButton>();
+        // Update quick pick with loaded data
+        quickPick.busy = false;
         quickPick.items = items;
         quickPick.placeholder = accounts.length === 0 ? 'No GitHub accounts - Add one to get started' : 'GitHub Account Manager';
         
@@ -215,10 +230,10 @@ async function showAccountMenu() {
         });
         
         quickPick.onDidHide(() => quickPick.dispose());
-        quickPick.show();
         
     } catch (error) {
         console.error('Error showing account menu:', error);
+        quickPick.hide();
         vscode.window.showErrorMessage('Failed to load GitHub accounts');
     }
 }
