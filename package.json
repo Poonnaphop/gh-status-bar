@@ -1,7 +1,7 @@
 {
   "name": "gh-status-bar",
-  "displayName": "GitHub Status Bar",
-  "description": "Display GitHub authenticated user in VS Code status bar with multi-account support and custom colors",
+  "displayName": "GitHub Account Switcher",
+  "description": "Switch between multiple GitHub accounts with custom colors - displays current user in status bar",
   "version": "0.0.3",
   "publisher": "poonnaphop",
   "author": {
@@ -18,10 +18,12 @@
   "homepage": "https://github.com/Poonnaphop/gh-status-bar#readme",
   "keywords": [
     "github",
+    "account-switcher",
     "status-bar",
     "authentication",
     "gh-cli",
-    "multi-account"
+    "multi-account",
+    "account-manager"
   ],
   "engines": {
     "vscode": "^1.85.0"
@@ -37,7 +39,7 @@
     "commands": [
       {
         "command": "gh-status-bar.refresh",
-        "title": "Refresh GitHub User"
+        "title": "GitHub Account Switcher: Manage Accounts"
       }
     ]
   },

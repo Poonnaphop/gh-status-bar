@@ -51,7 +51,7 @@ let statusBarItem: vscode.StatusBarItem;
 let extensionContext: vscode.ExtensionContext;
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('GitHub Status Bar extension is now active');
+    console.log('GitHub Account Switcher extension is now active');
     
     // Store context globally for access in other functions
     extensionContext = context;

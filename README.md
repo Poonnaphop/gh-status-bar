@@ -1,6 +1,6 @@
-# GitHub Status Bar
+# GitHub Account Switcher
 
-A VS Code extension that displays your current GitHub authenticated user in the status bar.
+A VS Code extension to easily switch between multiple GitHub accounts. Displays the current authenticated user in the status bar with custom colors.
 
 ## Features
 
