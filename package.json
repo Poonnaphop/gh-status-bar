@@ -4,6 +4,7 @@
   "description": "Switch between multiple GitHub accounts with custom colors - displays current user in status bar",
   "version": "0.1.0",
   "publisher": "poonnaphop",
+  "icon": "icon.jpg",
   "author": {
     "name": "Poonnaphop"
   },
