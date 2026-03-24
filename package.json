@@ -2,7 +2,7 @@
   "name": "gh-status-bar",
   "displayName": "GitHub Account Switcher",
   "description": "Switch between multiple GitHub accounts with custom colors - displays current user in status bar",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "poonnaphop",
   "icon": "icon.jpg",
   "author": {
